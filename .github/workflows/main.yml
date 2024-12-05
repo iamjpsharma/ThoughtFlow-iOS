@@ -1,0 +1,69 @@
+name: iOS CI with Code Coverage
+
+on:
+  push:
+    branches:
+      - main  # Trigger on push to the main branch
+  pull_request:
+    branches:
+      - main  # Trigger on pull request to the main branch
+
+jobs:
+  build:
+    name: Build and Test iOS app
+    runs-on: macos-latest
+
+    steps:
+      # Step 1: Checkout the repository code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: Set up Xcode (adjust xcode-version if necessary)
+      - name: Set up Xcode
+        uses: macos-actions/setup-xcode@v2
+        with:
+          xcode-version: '14.1'  # Change this if you're using a different Xcode version
+
+      # Step 3: Install CocoaPods dependencies (if using CocoaPods)
+      - name: Install dependencies
+        run: |
+          sudo gem install cocoapods
+          pod install
+
+      # Step 4: Build the app with code coverage enabled
+      - name: Build the app with code coverage
+        run: |
+          xcodebuild -workspace ThoughtFlow.xcworkspace \
+                     -scheme ThoughtFlow \
+                     -sdk iphonesimulator \
+                     -destination 'platform=iOS Simulator,name=iPhone 12,OS=latest' \
+                     -enableCodeCoverage YES \
+                     build
+
+      # Step 5: Run unit tests with code coverage enabled
+      - name: Run tests with code coverage
+        run: |
+          xcodebuild test -workspace ThoughtFlow.xcworkspace \
+                          -scheme ThoughtFlowTests \
+                          -destination 'platform=iOS Simulator,name=iPhone 12,OS=latest' \
+                          -enableCodeCoverage YES  # Ensure code coverage is enabled
+
+      # Step 6: Run UI tests with code coverage enabled
+      - name: Run UI tests with code coverage
+        run: |
+          xcodebuild test -workspace ThoughtFlow.xcworkspace \
+                          -scheme ThoughtFlowUITests \
+                          -destination 'platform=iOS Simulator,name=iPhone 12,OS=latest' \
+                          -enableCodeCoverage YES  # Ensure code coverage is enabled
+
+      # Step 7: Upload code coverage to GitHub actions artifacts (since no token is used)
+      - name: Upload Code Coverage to GitHub Actions
+        uses: actions/upload-artifact@v3
+        with:
+          name: code-coverage-report
+          path: build/coverage
+
+      # Step 8: Clean up the derived data to free space (optional but recommended)
+      - name: Clean up
+        run: |
+          rm -rf ~/Library/Developer/Xcode/DerivedData
