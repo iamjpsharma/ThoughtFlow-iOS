@@ -12,46 +12,65 @@ struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
 
     @FetchRequest(
-        sortDescriptors: [NSSortDescriptor(keyPath: \Item.timestamp, ascending: true)],
+        sortDescriptors: [NSSortDescriptor(keyPath: \ThoughtFlows.timestamp, ascending: true)],
         animation: .default)
-    private var items: FetchedResults<Item>
+    private var thoughtFlows: FetchedResults<ThoughtFlows>
 
     var body: some View {
         NavigationView {
-            List {
-                ForEach(items) { item in
-                    NavigationLink {
-                        Text("Item at \(item.timestamp!, formatter: itemFormatter)")
-                    } label: {
-                        Text(item.timestamp!, formatter: itemFormatter)
-                    }
-                }
-                .onDelete(perform: deleteItems)
-            }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
-                }
-                ToolbarItem {
+            if thoughtFlows.isEmpty{
+                VStack {
+                    Image(systemName: "tray")
+                        .font(.system(size: 60))
+                        .foregroundColor(.gray)
+                    Text("No ThoughtFlow")
+                        .font(.title2)
+                        .foregroundColor(.gray)
+                        .padding(.top, 8)
                     Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
+                        Label("Add ThoughtFlow", systemImage: "plus.circle")
+                            .font(.headline)
+                            .padding()
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .padding(.top, 16)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else {
+                List {
+                    ForEach(thoughtFlows) { thoughtFlow in
+                        NavigationLink {
+                            Text("Item at \(thoughtFlow.timestamp!, formatter: itemFormatter)")
+                        } label: {
+                            Text(thoughtFlow.timestamp!, formatter: itemFormatter)
+                        }
+                    }
+                    .onDelete(perform: deleteItems)
+                }
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        EditButton()
+                    }
+                    ToolbarItem {
+                        Button(action: addItem) {
+                            Label("Add Item", systemImage: "plus")
+                        }
                     }
                 }
+                Text("Select an item")
             }
-            Text("Select an item")
+            
         }
     }
 
     private func addItem() {
         withAnimation {
-            let newItem = Item(context: viewContext)
+            let newItem = ThoughtFlows(context: viewContext)
             newItem.timestamp = Date()
 
             do {
                 try viewContext.save()
             } catch {
-                // Replace this implementation with code to handle the error appropriately.
-                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
                 let nsError = error as NSError
                 fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
             }
@@ -60,13 +79,11 @@ struct ContentView: View {
 
     private func deleteItems(offsets: IndexSet) {
         withAnimation {
-            offsets.map { items[$0] }.forEach(viewContext.delete)
+            offsets.map { thoughtFlows[$0] }.forEach(viewContext.delete)
 
             do {
                 try viewContext.save()
             } catch {
-                // Replace this implementation with code to handle the error appropriately.
-                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
                 let nsError = error as NSError
                 fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
             }
