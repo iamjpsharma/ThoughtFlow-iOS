@@ -9,6 +9,22 @@ ThoughtFlow focuses on offering a distraction-free journaling experience with pl
 
 ---
 
+## 🚀 **Tech Stack**
+
+- [x] **SwiftUI**: The modern framework for building user interfaces on iOS. We use SwiftUI for building declarative UIs, ensuring a smooth and consistent user experience.
+- [x] **Core Data**: A powerful framework for data management and persistence. We use Core Data to store and retrieve app data efficiently.
+- [x] **GitHub Actions**: For Continuous Integration (CI) to automate builds, testing, and code coverage on every push.
+- [ ]  **Combine**: To manage asynchronous events and data flow in the app.
+- [ ] **Test-Driven Development (TDD)**: We follow TDD for writing unit and UI tests, ensuring higher code quality and maintainability.
+- [ ] **CocoaPods** (or SwiftPM): For managing third-party libraries and dependencies used in the app (if applicable).
+- [ ] **Swift Concurrency (async/await)**: Apple's latest feature for simplifying asynchronous programming. We use async/await to write cleaner, more readable code for tasks like networking, background operations, and more.
+- [ ] **CoreML**: For integrating machine learning models into the app. CoreML allows easy on-device predictions, ensuring faster, privacy-conscious AI capabilities.
+- [ ] **Swift Package Manager (SPM)**: The official dependency manager for Swift. It simplifies the integration of third-party libraries and tools directly into your Xcode project without external dependencies like CocoaPods or Carthage.
+- [ ] **App Clips**: A small part of an app that’s discoverable and usable without installation. We use App Clips for delivering fast experiences for specific tasks within the app.
+- [ ] **WidgetKit**: For creating home screen widgets, enabling users to interact with your app’s content right from the home screen without opening the app.
+- [ ] **Intents & SiriKit**: For creating voice-based interactions through Siri, enabling users to perform tasks hands-free or with simple voice commands.
+
+
 ## 📋 **Features**  
 
 ### ✅ Current Features  
