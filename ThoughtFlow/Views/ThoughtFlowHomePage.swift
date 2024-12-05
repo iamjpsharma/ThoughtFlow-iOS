@@ -18,7 +18,7 @@ struct ThoughtFlowHomePage: View {
 
     var body: some View {
         NavigationView {
-            if thoughtFlows.isEmpty{
+            if thoughtFlows.isEmpty {
                 VStack {
                     Image(systemName: "tray")
                         .font(.system(size: 60))
@@ -39,11 +39,7 @@ struct ThoughtFlowHomePage: View {
             } else {
                 List {
                     ForEach(thoughtFlows) { thoughtFlow in
-                        NavigationLink {
-                            Text("Item at \(thoughtFlow.timestamp!, formatter: itemFormatter)")
-                        } label: {
-                            Text(thoughtFlow.timestamp!, formatter: itemFormatter)
-                        }
+                        ThoughtFlowCellUIView(thoughtFlow: thoughtFlow)
                     }
                     .onDelete(perform: deleteItems)
                 }
@@ -57,9 +53,7 @@ struct ThoughtFlowHomePage: View {
                         }
                     }
                 }
-                Text("Select an item")
             }
-            
         }
     }
 
@@ -67,6 +61,8 @@ struct ThoughtFlowHomePage: View {
         withAnimation {
             let newItem = ThoughtFlows(context: viewContext)
             newItem.timestamp = Date()
+            newItem.title = "New ThoughtFlow"
+            newItem.details = "some details for now"
 
             do {
                 try viewContext.save()
@@ -90,13 +86,6 @@ struct ThoughtFlowHomePage: View {
         }
     }
 }
-
-private let itemFormatter: DateFormatter = {
-    let formatter = DateFormatter()
-    formatter.dateStyle = .short
-    formatter.timeStyle = .medium
-    return formatter
-}()
 
 #Preview {
     ThoughtFlowHomePage().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
