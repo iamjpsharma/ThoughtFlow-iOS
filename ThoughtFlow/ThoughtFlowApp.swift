@@ -13,7 +13,7 @@ struct ThoughtFlowApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ThoughtFlowHomePage()
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
     }

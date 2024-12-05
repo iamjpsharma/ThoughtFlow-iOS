@@ -1,5 +1,5 @@
 //
-//  ContentView.swift
+//  ThoughtFlowHomePage.swift
 //  ThoughtFlow
 //
 //  Created by jaiprakash sharma on 05/12/24.
@@ -8,7 +8,7 @@
 import SwiftUI
 import CoreData
 
-struct ContentView: View {
+struct ThoughtFlowHomePage: View {
     @Environment(\.managedObjectContext) private var viewContext
 
     @FetchRequest(
@@ -99,5 +99,5 @@ private let itemFormatter: DateFormatter = {
 }()
 
 #Preview {
-    ContentView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+    ThoughtFlowHomePage().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
 }
