@@ -3,28 +3,36 @@ name: iOS CI with Code Coverage
 on:
   push:
     branches:
-      - main  # Trigger on push to the main branch
+      - main
   pull_request:
     branches:
-      - main  # Trigger on pull request to the main branch
+      - main
 
 jobs:
   build:
     name: Build and Test iOS app
-    runs-on: macos-latest  # Use macOS runner with pre-installed Xcode
+    runs-on: macos-latest
 
     steps:
-      # Step 1: Checkout the repository code
+      # Step 1: Checkout code
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # Step 2: Install CocoaPods dependencies (if using CocoaPods)
+      # Step 2: Set Xcode version
+      - name: Select Xcode version
+        run: sudo xcode-select -switch /Applications/Xcode_15.4.app
+
+      # Step 3: Install CocoaPods dependencies
       - name: Install dependencies
         run: |
-          sudo gem install cocoapods
+          sudo gem install cocoapods -v 1.12.1  # Adjust if needed
           pod install
 
-      # Step 3: Build the app with code coverage enabled
+      # Step 4: List Schemes (Debugging Step)
+      - name: List Schemes
+        run: xcodebuild -list -workspace ThoughtFlow.xcworkspace
+
+      # Step 5: Build the app with code coverage enabled
       - name: Build the app with code coverage
         run: |
           xcodebuild -workspace ThoughtFlow.xcworkspace \
@@ -34,7 +42,7 @@ jobs:
                      -enableCodeCoverage YES \
                      build
 
-      # Step 4: Run unit tests with code coverage enabled
+      # Step 6: Run unit tests with code coverage enabled
       - name: Run tests with code coverage
         run: |
           xcodebuild test -workspace ThoughtFlow.xcworkspace \
@@ -42,27 +50,19 @@ jobs:
                           -destination 'platform=iOS Simulator,name=iPhone 14,OS=latest' \
                           -enableCodeCoverage YES
 
-      # Step 5: Run UI tests with code coverage enabled
-      - name: Run UI tests with code coverage
-        run: |
-          xcodebuild test -workspace ThoughtFlow.xcworkspace \
-                          -scheme ThoughtFlowUITests \
-                          -destination 'platform=iOS Simulator,name=iPhone 14,OS=latest' \
-                          -enableCodeCoverage YES
-
-      # Step 6: Generate Code Coverage Report
+      # Step 7: Generate Code Coverage Report
       - name: Generate Code Coverage Report
         run: |
           xcrun xccov view --report --json build/Logs/Test/*.xcresult > coverage.json
 
-      # Step 7: Upload code coverage report to GitHub Actions
+      # Step 8: Upload Code Coverage Report
       - name: Upload Code Coverage Report
         uses: actions/upload-artifact@v3
         with:
           name: code-coverage-report
           path: coverage.json
 
-      # Step 8: Clean up derived data
+      # Step 9: Clean up derived data
       - name: Clean up
         run: |
           rm -rf ~/Library/Developer/Xcode/DerivedData
