@@ -10,12 +10,12 @@ import CoreData
 
 struct ThoughtFlowHomePage: View {
     @Environment(\.managedObjectContext) private var viewContext
-
+    
     @FetchRequest(
         sortDescriptors: [NSSortDescriptor(keyPath: \ThoughtFlows.timestamp, ascending: true)],
         animation: .default)
     private var thoughtFlows: FetchedResults<ThoughtFlows>
-
+    
     var body: some View {
         NavigationView {
             if thoughtFlows.isEmpty {
@@ -39,11 +39,9 @@ struct ThoughtFlowHomePage: View {
             } else {
                 List {
                     ForEach(thoughtFlows) { thoughtFlow in
-                        ThoughtFlowCellUIView(thoughtFlow: thoughtFlow)
-                            .onTapGesture {
-                                <#code#>
-                            }
-
+                        NavigationLink(destination: DetailsPageView(thoughtFlow: thoughtFlow)) {
+                            ThoughtFlowCellUIView(thoughtFlow: thoughtFlow)
+                        }
                     }
                     .onDelete(perform: deleteItems)
                 }
@@ -60,14 +58,14 @@ struct ThoughtFlowHomePage: View {
             }
         }
     }
-
+    
     private func addItem() {
         withAnimation {
             let newItem = ThoughtFlows(context: viewContext)
             newItem.timestamp = Date()
             newItem.title = "New ThoughtFlow"
             newItem.details = "some details for now"
-
+            
             do {
                 try viewContext.save()
             } catch {
@@ -76,11 +74,11 @@ struct ThoughtFlowHomePage: View {
             }
         }
     }
-
+    
     private func deleteItems(offsets: IndexSet) {
         withAnimation {
             offsets.map { thoughtFlows[$0] }.forEach(viewContext.delete)
-
+            
             do {
                 try viewContext.save()
             } catch {
