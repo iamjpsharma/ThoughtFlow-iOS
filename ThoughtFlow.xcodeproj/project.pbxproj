@@ -47,22 +47,16 @@
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		396A32542D0226930086C1E8 /* ThoughtFlow */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
 			path = ThoughtFlow;
 			sourceTree = "<group>";
 		};
 		396A326A2D0226950086C1E8 /* ThoughtFlowTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
 			path = ThoughtFlowTests;
 			sourceTree = "<group>";
 		};
 		396A32742D0226950086C1E8 /* ThoughtFlowUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
 			path = ThoughtFlowUITests;
 			sourceTree = "<group>";
 		};
@@ -128,7 +122,6 @@
 				74B36E599439CFA9B670122A /* Pods-ThoughtFlowTests.debug.xcconfig */,
 				234FBE2996CBBA5BA288DAB7 /* Pods-ThoughtFlowTests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
