@@ -1,0 +1,6 @@
+framework module Pods_ThoughtFlow_ThoughtFlowUITests {
+  umbrella header "Pods-ThoughtFlow-ThoughtFlowUITests-umbrella.h"
+
+  export *
+  module * { export * }
+}

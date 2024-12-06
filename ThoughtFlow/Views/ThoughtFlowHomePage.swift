@@ -40,6 +40,10 @@ struct ThoughtFlowHomePage: View {
                 List {
                     ForEach(thoughtFlows) { thoughtFlow in
                         ThoughtFlowCellUIView(thoughtFlow: thoughtFlow)
+                            .onTapGesture {
+                                <#code#>
+                            }
+
                     }
                     .onDelete(perform: deleteItems)
                 }

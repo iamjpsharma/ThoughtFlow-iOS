@@ -16,13 +16,13 @@ jobs:
     steps:
       # Step 1: Checkout the repository code
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      # Step 2: Set up Xcode (adjust xcode-version if necessary)
+      # Step 2: Set up Xcode
       - name: Set up Xcode
-        uses: macos-actions/setup-xcode@v2
+        uses: actions/setup-xcode@v3
         with:
-          xcode-version: '14.1'  # Change this if you're using a different Xcode version
+          xcode-version: '14.3'  # Replace with your Xcode version
 
       # Step 3: Install CocoaPods dependencies (if using CocoaPods)
       - name: Install dependencies
@@ -36,7 +36,7 @@ jobs:
           xcodebuild -workspace ThoughtFlow.xcworkspace \
                      -scheme ThoughtFlow \
                      -sdk iphonesimulator \
-                     -destination 'platform=iOS Simulator,name=iPhone 12,OS=latest' \
+                     -destination 'platform=iOS Simulator,name=iPhone 14,OS=latest' \
                      -enableCodeCoverage YES \
                      build
 
@@ -45,25 +45,30 @@ jobs:
         run: |
           xcodebuild test -workspace ThoughtFlow.xcworkspace \
                           -scheme ThoughtFlowTests \
-                          -destination 'platform=iOS Simulator,name=iPhone 12,OS=latest' \
-                          -enableCodeCoverage YES  # Ensure code coverage is enabled
+                          -destination 'platform=iOS Simulator,name=iPhone 14,OS=latest' \
+                          -enableCodeCoverage YES
 
       # Step 6: Run UI tests with code coverage enabled
       - name: Run UI tests with code coverage
         run: |
           xcodebuild test -workspace ThoughtFlow.xcworkspace \
                           -scheme ThoughtFlowUITests \
-                          -destination 'platform=iOS Simulator,name=iPhone 12,OS=latest' \
-                          -enableCodeCoverage YES  # Ensure code coverage is enabled
+                          -destination 'platform=iOS Simulator,name=iPhone 14,OS=latest' \
+                          -enableCodeCoverage YES
 
-      # Step 7: Upload code coverage to GitHub actions artifacts (since no token is used)
-      - name: Upload Code Coverage to GitHub Actions
+      # Step 7: Generate Code Coverage Report
+      - name: Generate Code Coverage Report
+        run: |
+          xcrun xccov view --report --json build/Logs/Test/*.xcresult > coverage.json
+
+      # Step 8: Upload code coverage report to GitHub Actions
+      - name: Upload Code Coverage Report
         uses: actions/upload-artifact@v3
         with:
           name: code-coverage-report
-          path: build/coverage
+          path: coverage.json
 
-      # Step 8: Clean up the derived data to free space (optional but recommended)
+      # Step 9: Clean up derived data
       - name: Clean up
         run: |
           rm -rf ~/Library/Developer/Xcode/DerivedData
