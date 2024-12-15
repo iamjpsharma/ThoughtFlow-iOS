@@ -29,10 +29,10 @@ ThoughtFlow focuses on offering a distraction-free journaling experience with pl
 
 ### ✅ Current Features  
 - [x] **Empty State**: Display an icon and message when no entries are available. 
-- [ ] **Offline Journaling**: Local data storage using Core Data.  
+- [x] **Offline Journaling**: Local data storage using Core Data.  
 - [ ] **Simple and Intuitive UI**: A clean, minimalist interface.  
-- [ ] **Entry Management**: Add, view, and delete journal entries.  
-- [ ] **Detail View**: View the details of a journal entry, including title, content, and timestamp.  
+- [x] **Entry Management**: Add, view, and delete journal entries.  
+- [x] **Detail View**: View the details of a journal entry, including title, content, and timestamp.  
  
 
 ---
