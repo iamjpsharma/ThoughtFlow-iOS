@@ -13,8 +13,10 @@ struct ThoughtFlowApp: App {
 
     var body: some Scene {
         WindowGroup {
+            //            ThoughtFlowHomePage(context: persistenceController.container.viewContext)
             ThoughtFlowHomePage()
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
     }
 }
+

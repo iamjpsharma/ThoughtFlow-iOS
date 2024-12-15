@@ -10,48 +10,74 @@ import SwiftUI
 import CoreData
 
 struct DetailsPageView: View {
-    
-    private var thoughtFlow:  ThoughtFlows
     @Environment(\.managedObjectContext) private var viewContext
+    @Environment(\.presentationMode) private var presentationMode  // This is for dismissing the view
     
+    @ObservedObject private var thoughtFlow: ThoughtFlows
+    
+    @State private var title: String
+    @State private var details: String
+
     init(thoughtFlow: ThoughtFlows) {
         self.thoughtFlow = thoughtFlow
+        _title = State(initialValue: thoughtFlow.title ?? "")
+        _details = State(initialValue: thoughtFlow.details ?? "")
     }
-    
+
     var body: some View {
-        
-        LazyVStack {
-            Text("Details Page")
-                .font(.headline)
-            Text("title: \(thoughtFlow.title ?? "untitled")")
-            Text("Details: \(thoughtFlow.details ?? "no thoughts")")
+        VStack(spacing: 16) {
+            TextField("Enter title", text: $title, onCommit: saveChanges)
+                .font(.largeTitle)
+                .padding()
+                .background(Color(UIColor.secondarySystemBackground))
+                .cornerRadius(8)
+
+            TextEditor(text: $details)
+                .padding()
+                .background(Color(UIColor.secondarySystemBackground))
+                .cornerRadius(8)
+                .frame(maxHeight: .infinity)
+
+            Spacer()
         }
-    }
-    
-    private func addItem() {
-        withAnimation {
-            let newItem = ThoughtFlows(context: viewContext)
-            newItem.timestamp = Date()
-            newItem.title = "New ThoughtFlow"
-            newItem.details = "some details for now"
-            
-            do {
-                try viewContext.save()
-            } catch {
-                let nsError = error as NSError
-                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+        .padding()
+        .navigationTitle("Details")
+        .toolbar {
+            ToolbarItem(placement: .confirmationAction) {
+                Button("Save") {
+                    saveChanges()
+                }
             }
         }
     }
-    
+
+    private func saveChanges() {
+        thoughtFlow.title = title
+        thoughtFlow.details = details
+        thoughtFlow.timestamp = Date()  // Update timestamp to reflect the current time
+
+        do {
+            try viewContext.save()
+        } catch {
+            let nsError = error as NSError
+            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+        }
+        
+        // Dismiss the view after saving
+        presentationMode.wrappedValue.dismiss()
+    }
 }
+
+
+
+
 
 #Preview {
     DetailsPageView(thoughtFlow: mockThoughtFlow())
 }
 
 // Helper function to create a mock ThoughtFlows object
-func mockThoughtFlow() -> ThoughtFlows {
+@MainActor func mockThoughtFlow() -> ThoughtFlows {
     let context = PersistenceController.preview.container.viewContext
     let newItem = ThoughtFlows(context: context)
     newItem.timestamp = Date()
@@ -59,4 +85,3 @@ func mockThoughtFlow() -> ThoughtFlows {
     newItem.details = "Some details for now"
     return newItem
 }
-
