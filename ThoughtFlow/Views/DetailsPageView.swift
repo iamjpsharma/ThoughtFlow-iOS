@@ -18,6 +18,7 @@ struct DetailsPageView: View {
     @State private var title: String
     @State private var details: String
 
+    // Initialize the view with a ThoughtFlows object
     init(thoughtFlow: ThoughtFlows) {
         self.thoughtFlow = thoughtFlow
         _title = State(initialValue: thoughtFlow.title ?? "")
@@ -26,12 +27,14 @@ struct DetailsPageView: View {
 
     var body: some View {
         VStack(spacing: 16) {
+            // Text field for entering the title
             TextField("Enter title", text: $title, onCommit: saveChanges)
                 .font(.largeTitle)
                 .padding()
                 .background(Color(UIColor.secondarySystemBackground))
                 .cornerRadius(8)
 
+            // Text editor for entering the details
             TextEditor(text: $details)
                 .padding()
                 .background(Color(UIColor.secondarySystemBackground))
@@ -43,6 +46,7 @@ struct DetailsPageView: View {
         .padding()
         .navigationTitle("Details")
         .toolbar {
+            // Toolbar item for saving the changes
             ToolbarItem(placement: .confirmationAction) {
                 Button("Save") {
                     saveChanges()
@@ -51,6 +55,7 @@ struct DetailsPageView: View {
         }
     }
 
+    // Function to save the changes
     private func saveChanges() {
         thoughtFlow.title = title
         thoughtFlow.details = details
